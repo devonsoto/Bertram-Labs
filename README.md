@@ -37,6 +37,7 @@ npm install && npm run dev
 ## Deployment
 
 Or you can visit here to see the app live.
+https://bertram-labs.vercel.app/
 
 ## How to Enter Data
 
