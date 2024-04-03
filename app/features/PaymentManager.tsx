@@ -6,20 +6,20 @@ import { z } from 'zod';
 
 import { useState } from 'react';
 
-import { employees as EmployeeData } from '@/data/employees';
+import { Employee, employees as EmployeeData } from '@/data/employees';
 import { FormSchema } from './AddPayment';
 
+const minFist = EmployeeData.reduce((min, employee) => {
+  return employee.total_money_spent < min.total_money_spent ? employee : min;
+});
+
 export default function PaymentManager() {
-  const minFist = EmployeeData.reduce((min, employee) => {
-    return employee.total_money_spent < min.total_money_spent ? employee : min;
-  });
   const [employees, setEmployees] = useState(EmployeeData);
-  const [minEmployee, setMinEmployee] = useState(employees[0]);
+  const [minEmployee, setMinEmployee] = useState(minFist);
   const employeeNames = employees.map((employee) => employee.name);
 
   const updateEmployeesInfo = (data: z.infer<typeof FormSchema>) => {
-    console.log(data);
-    const updatedEmployees = employees.map((employee) => {
+    const updatedEmployees: Employee[] = employees.map((employee) => {
       if (employee.name === data.name) {
         return {
           ...employee,
@@ -29,8 +29,13 @@ export default function PaymentManager() {
       return employee;
     });
 
-    console.log({ updatedEmployees });
+    const newMinEmployee = updatedEmployees.reduce((min, employee) => {
+      return employee.total_money_spent < min.total_money_spent
+        ? employee
+        : min;
+    });
 
+    setMinEmployee(newMinEmployee);
     setEmployees(updatedEmployees);
   };
 

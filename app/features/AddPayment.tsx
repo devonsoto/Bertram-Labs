@@ -28,9 +28,7 @@ import { toast } from '@/components/ui/use-toast';
 import { useState } from 'react';
 
 export const FormSchema = z.object({
-  name: z.string({
-    required_error: 'Please select a name.',
-  }),
+  name: z.string().min(1, 'Please select a name.'),
   amount: z.coerce
     .number()
     .min(1, { message: 'Amount must be greater than 0' }),
@@ -42,8 +40,6 @@ interface AddPaymentProps {
 }
 
 export function AddPayment({ data, onCallbackFunction }: AddPaymentProps) {
-  const [employees, SetEmployees] = useState(data);
-
   const form = useForm<z.infer<typeof FormSchema>>({
     resolver: zodResolver(FormSchema),
     defaultValues: {
@@ -92,10 +88,7 @@ export function AddPayment({ data, onCallbackFunction }: AddPaymentProps) {
                   })}
                 </SelectContent>
               </Select>
-              <FormDescription>
-                Select an employee
-                {/* <Link href='/examples/forms'>email settings</Link>. */}
-              </FormDescription>
+              <FormDescription>Select an employee</FormDescription>
               <FormMessage />
             </FormItem>
           )}
